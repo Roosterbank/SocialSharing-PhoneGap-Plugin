@@ -271,8 +271,8 @@ public class SocialSharing extends CordovaPlugin {
         final boolean hasMultipleAttachments = files.length() > 1;
         final Intent sendIntent = new Intent(hasMultipleAttachments ? Intent.ACTION_SEND_MULTIPLE : Intent.ACTION_SEND);
         final Intent receiverIntent = new Intent(cordova.getActivity().getApplicationContext(), ShareChooserPendingIntent.class);
-        final PendingIntent pendingIntent = PendingIntent.getBroadcast(cordova.getActivity().getApplicationContext(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        sendIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(cordova.getActivity().getApplicationContext(), 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 
         try {
           if (files.length() > 0 && !"".equals(files.getString(0))) {
@@ -715,6 +715,7 @@ public class SocialSharing extends CordovaPlugin {
             _callbackContext.sendPluginResult(new PluginResult(
                 PluginResult.Status.OK,
                 json));
+            ShareChooserPendingIntent.chosenComponent = null;
           } catch (JSONException e) {
             _callbackContext.error(e.getMessage());
           }
